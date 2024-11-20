@@ -1,0 +1,30 @@
+---
+import { getSession } from 'auth-astro/server';
+
+// bad programming practice 201
+const allowed_users = [""]
+
+const session = await getSession(Astro.request);
+let allowed_in = false;
+
+if (import.meta.env.MODE === "development") {
+    allowed_in = true;
+}
+
+if (session) {
+    allowed_users.forEach((element : String) => {
+        if (session.user?.name === element) {
+            allowed_in = true;
+        }
+        console.log(element)
+    });
+}
+
+---
+{
+    allowed_in ? (
+        <slot />
+    ) : (
+        <p>Not logged in</p>
+    )
+}
